@@ -1,0 +1,85 @@
+[project]
+name = "findex"
+version = "1.0.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Yeva Bykova", email = "ieva.bykova@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.162.0",
+    "fastembed>=0.9.1",
+    "httpx>=0.28.1",
+    "jinja2>=3.1.6",
+    "numpy>=2.5.4",
+    "pydantic-settings>=2.16.2",
+    "rich>=15.0.0",
+    "typer>=0.27.3",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[project.scripts]
+findex = "findex.cli:app"
+
+[build-system]
+requires = ["uv_build>=0.12.13,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "flameprof>=0.4",
+    "httpx2>=2.16.0",
+    "hypothesis>=6.170.12",
+    "py-spy>=0.4.3",
+    "pyright>=1.1.414",
+    "pytest>=9.1.1",
+    "pytest-benchmark>=5.3.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.17.3",
+]
+# Лише для графіка в README: `uv run --group bench python scripts/plot_speedup.py ...`
+bench = [
+    "matplotlib>=3.10.0",
+]
+
+[tool.pyright]
+typeCheckingMode = "strict"
+include = ["src", "tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --benchmark-disable"
+markers = ["slow: повільні тести (реальний корпус); пропусти їх через -m 'not slow'"]
+
+[tool.coverage.run]
+source = ["findex"]
+
+omit = [
+    "src/findex/__main__.py",
+    "src/findex/benchmark.py",
+    "src/findex/memory_benchmark.py",
+    "src/findex/serialize_benchmark.py",
+    "src/findex/ranking_checks.py",
+ 
+    "src/findex/parallel_benchmark.py",
+    "src/findex/race_demo.py",
+    "src/findex/io_benchmark.py",
+
+    "src/findex/mirror_server.py",
+    "src/findex/crawl_benchmark.py",
+  
+    "src/findex/web_benchmark.py",
+    "src/findex/numpy_benchmark.py",
+]
+
+[tool.coverage.report]
+exclude_also = ["if __name__ == .__main__.:"]
